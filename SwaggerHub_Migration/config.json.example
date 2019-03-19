@@ -1,0 +1,12 @@
+{
+	"SAAS": {
+		"API_KEY": ...,
+		"REGISTRY_API_BASEPATH": "https://api.swaggerhub.com/apis/",
+		"ORG": "SwaggerHub Org Name"
+	},
+	"ONPREM":{
+		"API_KEY": ... ,
+		"REGISTRY_API_BASEPATH": "https://{swaggerhub.onpremdomain}/v1/apis/",
+		"ORG": "SwaggerHub Org Name"
+	}
+}
