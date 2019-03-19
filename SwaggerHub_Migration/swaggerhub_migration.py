@@ -3,7 +3,6 @@ Created on Mar 19, 2019
 
 @author: Steven.Colon
 '''
-
 import requests
 import json
 
@@ -28,7 +27,7 @@ for api_metadata in org_specs["apis"]:
 #    print(str(api_spec) + "\n\n\n\n\n\n")
     api_url = api_metadata["properties"][0]["url"] 
     last_slash = api_url.rindex('/', 0)
-    formatted_api_url = api_url[0: last_slash] 
+    formatted_api_url = api_url[0: last_slash]
 
     api_sh_name = formatted_api_url[formatted_api_url.rindex('/', 0) + 1 : len(formatted_api_url)]
     print("Name - " + api_sh_name)
@@ -44,19 +43,21 @@ for api_metadata in org_specs["apis"]:
         print(api_version_url)
         #Get spec of single API Version
         api_version_spec_call = requests.get(api_version_url, headers = {'Authorization': saas_api_key, 'accept': 'application/json'})
-        print("Status of API Version Spec Call - " +  str(api_version_spec_call.status_code))
+        #print("Status of API Version Spec Call - " +  str(api_version_spec_call.status_code))
         
         #push spec to OnPrem 
         onprem_post_url = onprem_registry_api + onprem_org + '/' + api_sh_name + '?isPrivate=true&force=true'
         
-        print("Posting Spec to - " + onprem_post_url)
+        #print("Posting Spec to - " + onprem_post_url)
         
         onprem_post_call = requests.post(onprem_post_url, headers={'Authorization':onprem_api_key}, json=api_version_spec_call.json())
         
-        print("Status of API Version Spec Call - " +  str(onprem_post_call.status_code))
         if(onprem_post_call.status_code != 201 and onprem_post_call.status_code != 200):
             print('INVALID ONPREM POST RESPONSE')
             exit()
+        else:
+            print("API Version Uploaded to OnPrem")
+            
     print("\n")
 
 
