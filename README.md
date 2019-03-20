@@ -4,9 +4,15 @@ SwaggerHub-Installation-Migration-Utility is a migration utility for current Swa
 
 It may have extensibility for moving between two SAAS Orgs or two OnPrem installations but this isn't currently tested. 
 
+## Important Note 
+
 Created by Steven Colon. 
 
 This script is not supported by SmartBear Software Inc.
+
+## License
+
+[MIT](https://choosealicense.com/licenses/mit/)
 
 
 
