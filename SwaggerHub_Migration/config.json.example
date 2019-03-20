@@ -1,12 +1,12 @@
 {
 	"EXPORTORG": {
 		"API_KEY": ...,
-		"REGISTRY_API_BASEPATH": "http(s)://{swaggerhub.domain}/apis/",
+		"REGISTRY_API_BASEPATH": "http(s)://{swaggerhub.domain}{/v1}/apis/",
 		"ORG": "SwaggerHub Org Name"
 	},
 	"IMPORTORG":{
 		"API_KEY": ... ,
-		"REGISTRY_API_BASEPATH": "http(s)://{swaggerhub.domain}/v1/apis/",
+		"REGISTRY_API_BASEPATH": "http(s)://{swaggerhub.domain}{/v1}/apis/",
 		"ORG": "SwaggerHub Org Name"
 	}
 }
