@@ -21,7 +21,7 @@ Download Repo locally
 ## Configuration Instructions
 config.json file is required in the same directory as the migration script. 
 
-Example config can be found [here](../SwaggerHub_Migration/config.json.example)
+Example config can be found [here](SwaggerHub_Migration/config.json.example)
 
 All fields are required. 
 
