@@ -16,15 +16,29 @@ Made on Python 3.7.1
 
 Requires the requests python library - http://docs.python-requests.org/en/master/ 
 
+Download Repo locally
+
+## Configuration Instructions
+config.json file is required in the same directory as the migration script. 
+
+Example config can be found [here](.../config.json.example)
+
+All fields are required. 
+
+The API Key can be found in the account settings - https://app.swaggerhub.com/help/account/settings
+You will need two different API Keys if the orgs are in separate installations. 
+
+Registry API Basepath indicates where the SwaggerHub api can be found. The format of the path changes depending on installation type.
+1. SmartBear Cloud Hosted Installation - Registry API format follows `https://api.swaggerhub.com/`
+2. On Premise Installation - Registry API format follows `https://{Custom Domain}/v1/`
+
+Org is the organization name in SwaggerHub
+
+
 ## Execution Instructions
 
-1. Download Repo locally
-
-2. Create 'config.json' in same directory as swaggerhub_migration.py and enter SwaggerHub information as shown here
-Note- You can pull the API Key from User Account Settings: https://app.swaggerhub.com/help/account/settings 
-
-3. Execute script - python swaggerhub_migration.py
-
+Execute script 
+`python swaggerhub_migration.py`
 
 ## License
 
