@@ -10,6 +10,22 @@ Created by Steven Colon.
 
 This script is not supported by SmartBear Software Inc.
 
+## Install Instructions 
+
+Made on Python 3.7.1
+
+Requires the requests python library - http://docs.python-requests.org/en/master/ 
+
+## Execution Instructions
+
+1. Download Repo locally
+
+2. Create 'config.json' in same directory as swaggerhub_migration.py and enter SwaggerHub information as shown here
+Note- You can pull the API Key from User Account Settings: https://app.swaggerhub.com/help/account/settings 
+
+3. Execute script - python swagger_migration.py
+
+
 ## License
 
 [MIT](https://choosealicense.com/licenses/mit/)
