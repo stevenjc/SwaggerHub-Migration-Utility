@@ -1,8 +1,8 @@
 # SwaggerHub-Installation-Migration-Utility
 
-SwaggerHub-Installation-Migration-Utility is a migration utility for current SwaggerHub SAAS users to move their API Specs and domains from the SmartBear Hosted SwaggerHub to an On-Premise SwaggerHub. 
+SwaggerHub-Installation-Migration-Utility is a migration utility for current SwaggerHub users to move their API Specs and domains to another SwaggerHub Organization. 
 
-It may have extensibility for moving between two SAAS Orgs or two OnPrem installations but this isn't currently tested. 
+The other organization can be in a different installation of SwaggerHub. So you can migrate from SmartBears cloud hosted to OnPrem or between OnPrem installations. 
 
 ## Important Note 
 
