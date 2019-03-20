@@ -1,12 +1,12 @@
 {
-	"SAAS": {
+	"EXPORTORG": {
 		"API_KEY": ...,
-		"REGISTRY_API_BASEPATH": "https://api.swaggerhub.com/apis/",
+		"REGISTRY_API_BASEPATH": "http(s)://{swaggerhub.domain}/apis/",
 		"ORG": "SwaggerHub Org Name"
 	},
-	"ONPREM":{
+	"IMPORTORG":{
 		"API_KEY": ... ,
-		"REGISTRY_API_BASEPATH": "https://{swaggerhub.onpremdomain}/v1/apis/",
+		"REGISTRY_API_BASEPATH": "http(s)://{swaggerhub.domain}/v1/apis/",
 		"ORG": "SwaggerHub Org Name"
 	}
 }
