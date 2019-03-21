@@ -1,4 +1,4 @@
-# SwaggerHub-Installation-Migration-Utility
+# SwaggerHub-Migration-Utility
 
 SwaggerHub-Installation-Migration-Utility is a migration utility for current SwaggerHub users to move their API Specs and domains to another SwaggerHub Organization. 
 
