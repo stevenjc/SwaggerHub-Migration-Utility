@@ -7,6 +7,7 @@
 	"IMPORTORG":{
 		"API_KEY": "..." ,
 		"REGISTRY_API_BASEPATH": "http(s)://{swaggerhub.domain}{/v1}/apis/",
-		"ORG": "SwaggerHub Org Name"
+		"ORG": "SwaggerHub Org Name",
+		"DEFAULT_PRIVATE_VISIBILITY": true
 	}
 }
