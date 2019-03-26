@@ -18,6 +18,11 @@ export_org_name = config['EXPORTORG']['ORG']
 import_org_api_key= config['IMPORTORG']['API_KEY']
 import_org_registry_basepath = config['IMPORTORG']['REGISTRY_API_BASEPATH']
 import_org_name = config['IMPORTORG']['ORG']
+private_visibility = config['IMPORTORG']['DEFAULT_PRIVATE_VISIBILITY']
+
+#check for boolean type in config
+if not type(private_visibility) is bool:
+    raise TypeError("DEFAULT_PRIVATE_VISIBILITY needs to be a boolean value")
 
 def main():
     #URL to pull/push API Specs
@@ -29,7 +34,7 @@ def main():
     org_apis_json = org_specs_call.json()
     
     if len(org_apis_json['apis']) == 0:
-        raise RuntimeError("No APIs Found in SAAS Org")
+        raise RuntimeError("No APIs Found in Import Org")
     
     print("Migrating " + str(org_apis_json["totalCount"]) + " OAS Specs from " + export_org_registry_api + export_org_name + " to " + import_org_registry_api + import_org_name)
     
@@ -47,6 +52,7 @@ def main():
     
     parse_org(export_org_domains_json, export_org_domains_url, import_org_domains_url)
 
+
 def parse_org(org_json, export_url, import_url):
     for metadata in org_json["apis"]:
         #Remove Default Version number from API Url so that we can pull all versions
@@ -55,7 +61,7 @@ def parse_org(org_json, export_url, import_url):
         formatted_url = url[0: last_slash]
         formatted_url = helper_functions.verify_http_type(formatted_url, export_url)
         
-            
+        #Pull name of spec in SwaggerHub (different from the real name of the spec)
         sh_name = formatted_url[formatted_url.rindex('/', 0) + 1 : len(formatted_url)]
         print("Name - " + sh_name)
         print("Pulling versions from " + formatted_url)
@@ -76,25 +82,24 @@ def export_versions(versions_json, sh_name, export_url, import_url):
         version_number = version["properties"][1]["value"]
         #Get spec of single API Version
         api_version_spec_call = requests.get(api_version_url, headers = {'Authorization': export_org_api_key})
-        #print("Status of API Version Spec Call - " +  str(api_version_spec_call.status_code))
         
         #push spec to OnPrem 
-        import_org_post_url = import_url + import_org_name + "/" + sh_name + '?isPrivate=true&version=' + version_number
+        import_org_post_url = import_url + import_org_name + "/" + sh_name + '?isPrivate=' + str(private_visibility) + '&version=' + version_number
+        
+        api_version_spec_json = api_version_spec_call.json()
         
         print("Posting Spec to - " + import_org_post_url)
         
-        import_version(import_org_post_url, api_version_spec_call)
+        import_version(import_org_post_url, api_version_spec_json)
             
     print("\n")
         
         
-def import_version(import_org_post_url, api_version_spec_call):
-    onprem_post_call = requests.post(import_org_post_url, headers={'Authorization': import_org_api_key}, json=api_version_spec_call.json())
+def import_version(import_org_post_url, api_version_spec_json):
+    onprem_post_call = requests.post(import_org_post_url, headers={'Authorization': import_org_api_key}, json=api_version_spec_json)
         
     if(onprem_post_call.status_code != 201 and onprem_post_call.status_code != 200):
         raise RuntimeError("Invalid OnPrem API Response - " + onprem_post_call.text)
-    else:
-        print("API Version Uploaded to OnPrem")
         
 main()
 
