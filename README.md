@@ -40,6 +40,10 @@ Org is the organization name in SwaggerHub
 Execute script 
 `python swaggerhub_migration.py`
 
+## Test Suite
+
+After the migration utility has executed, the input and output organizations will be compared to validate they reflect one another.
+
 ## License
 
    Copyright 2019 Steven Colon
