@@ -23,6 +23,9 @@ config.json file is required in the same directory as the migration script.
 
 Example config can be found [here](SwaggerHub_Migration/config.json.example)
 
+EXPORT_ORG indicates the organization that you are moving from. 
+IMPORT_ORG indicates the organization that you are moving to. 
+
 All fields are required. 
 
 The API Key can be found in the account settings - https://app.swaggerhub.com/help/account/settings
@@ -32,7 +35,9 @@ Registry API Basepath indicates where the SwaggerHub api can be found. The forma
 1. SmartBear Cloud Hosted Installation - Registry API format follows `https://api.swaggerhub.com/`
 2. On Premise Installation - Registry API format follows `https://{Custom Domain}/v1/`
 
-Org is the organization name in SwaggerHub
+Org is the organization name in SwaggerHub.
+
+For the import organization, set "DEFAULT_PRIVATE_VISIBILITY" to true if you want the APIs and domains to be set to private on import or false to set them to public.
 
 
 ## Execution Instructions
