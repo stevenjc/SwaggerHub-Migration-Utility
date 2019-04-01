@@ -70,6 +70,17 @@ def parse_org(org_json, export_url, import_url, migrating_apis):
         print("Found " + str(versions_json["totalCount"]) + " versions ...")
         
         export_versions(versions_json, sh_name, export_url, import_url)
+        
+        #Check if running API Spec migration and 
+        if migrating_apis and migrate_team_roles:
+            team_info = pull_team_and_roles(formatted_url)
+            
+            if team_info:
+                print("Teams Found")
+            else:
+                print("No Teams Found")
+            
+            
 
 #Format URL of API or Domain and retrieve Name in SwaggerHub
 def pull_url_and_name(metadata, export_url):
@@ -111,8 +122,23 @@ def import_version(import_org_post_url, api_version_spec_json):
     if(onprem_post_call.status_code != 201 and onprem_post_call.status_code != 200):
         raise RuntimeError("Invalid OnPrem API Response - " + onprem_post_call.text)
     
+def pull_team_and_roles(url):
+    print("getting collab for " + url)
+    collab_get_call = requests.get(url + "/.collaboration", headers = {'Authorization': export_org_api_key})
     
+    collab_json = collab_get_call.json()
+    
+    #Dictionary for team roles. { Team # : {'name' : value, 'roles' : ['VIEW', 'COMMENT', 'EDIT']}}
+    collab_team_info= {}
+    team_counter = 0
+    for team in collab_json["teams"]:
+        collab_team_info[team_counter] = {}
+        collab_team_info[team_counter]['name']= team['name']
+        collab_team_info[team_counter]['roles'] = team['roles']
+        team_counter += 1
         
+    return collab_team_info
+     
 main()
 
     
