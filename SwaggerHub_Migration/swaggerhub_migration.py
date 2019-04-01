@@ -14,6 +14,10 @@ with open('config.json', 'r') as file:
 export_org_api_key= config['EXPORTORG']['API_KEY']
 export_org_registry_basepath = config['EXPORTORG']['REGISTRY_API_BASEPATH']
 export_org_name = config['EXPORTORG']['ORG']
+migrate_team_roles = config ['EXPORTORG']['MIGRATE_TEAM_ROLES']
+
+if not type(migrate_team_roles) is bool:
+    raise TypeError("MIGRATE_TEAM_ROLES needs to be a boolean value")
 
 import_org_api_key= config['IMPORTORG']['API_KEY']
 import_org_registry_basepath = config['IMPORTORG']['REGISTRY_API_BASEPATH']
@@ -38,8 +42,7 @@ def main():
     
     print("Migrating " + str(org_apis_json["totalCount"]) + " OAS Specs from " + export_org_registry_api + export_org_name + " to " + import_org_registry_api + import_org_name)
     
-    parse_org(org_apis_json, export_org_registry_api, import_org_registry_api)
-    
+    parse_org(org_apis_json, export_org_registry_api, import_org_registry_api, True)
     
     export_org_domains_url = export_org_registry_basepath + "domains/"
     import_org_domains_url = import_org_registry_basepath + "domains/"
@@ -50,22 +53,16 @@ def main():
     
     print("Migrating " + str(export_org_domains_json["totalCount"]) + " Domains from " + export_org_registry_api + export_org_name + " to " + import_org_registry_api + import_org_name +"\n\n")
     
-    parse_org(export_org_domains_json, export_org_domains_url, import_org_domains_url)
-
-
-def parse_org(org_json, export_url, import_url):
-    for metadata in org_json["apis"]:
-        #Remove Default Version number from API Url so that we can pull all versions
-        url = metadata["properties"][0]["url"] 
-        last_slash = url.rindex('/', 0)
-        formatted_url = url[0: last_slash]
-        formatted_url = helper_functions.verify_http_type(formatted_url, export_url)
-        
-        #Pull name of spec in SwaggerHub (different from the real name of the spec)
-        sh_name = formatted_url[formatted_url.rindex('/', 0) + 1 : len(formatted_url)]
-        print("Name - " + sh_name)
-        print("Pulling versions from " + formatted_url)
+    parse_org(export_org_domains_json, export_org_domains_url,import_org_domains_url, False)
     
+
+
+def parse_org(org_json, export_url, import_url, migrating_apis):
+    for metadata in org_json["apis"]:
+        info = pull_url_and_name(metadata, export_url)
+        formatted_url = info["url"]
+        sh_name = info["name"]
+        
         #Pull json that shows each version of the spec 
         versions_call= requests.get(formatted_url, headers={'Authorization': export_org_api_key})
         versions_json = versions_call.json()
@@ -74,6 +71,19 @@ def parse_org(org_json, export_url, import_url):
         
         export_versions(versions_json, sh_name, export_url, import_url)
 
+#Format URL of API or Domain and retrieve Name in SwaggerHub
+def pull_url_and_name(metadata, export_url):
+    #Remove Default Version number from API Url so that we can pull all versions
+    url = metadata["properties"][0]["url"] 
+    last_slash = url.rindex('/', 0)
+    formatted_url = url[0: last_slash]
+    formatted_url = helper_functions.verify_http_type(formatted_url, export_url)
+    
+    #Pull name of spec in SwaggerHub (different from the real name of the spec)
+    sh_name = formatted_url[formatted_url.rindex('/', 0) + 1 : len(formatted_url)]
+    
+    return {"url": formatted_url, "name": sh_name}
+        
 def export_versions(versions_json, sh_name, export_url, import_url):
     #Pull API Version URLs
     for version in versions_json['apis']:
@@ -100,6 +110,8 @@ def import_version(import_org_post_url, api_version_spec_json):
         
     if(onprem_post_call.status_code != 201 and onprem_post_call.status_code != 200):
         raise RuntimeError("Invalid OnPrem API Response - " + onprem_post_call.text)
+    
+    
         
 main()
 
