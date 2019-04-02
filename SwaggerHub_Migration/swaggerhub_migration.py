@@ -73,12 +73,13 @@ def parse_org(org_json, export_url, import_url, migrating_apis):
         
         #Check if running API Spec migration and 
         if migrating_apis and migrate_team_roles:
-            team_info = pull_team_and_roles(formatted_url)
-            
-            if team_info:
+            collab_json = pull_team_and_roles(formatted_url)
+            if len(collab_json['teams']) != 0:
                 print("Teams Found")
+                teams_payload = construct_teams_payload(collab_json)
+                import_teams(import_url + import_org_name + "/" + sh_name , teams_payload)
             else:
-                print("No Teams Found")
+                print("No Teams Found to Migrate")
             
             
 
@@ -127,17 +128,29 @@ def pull_team_and_roles(url):
     collab_get_call = requests.get(url + "/.collaboration", headers = {'Authorization': export_org_api_key})
     
     collab_json = collab_get_call.json()
-    
-    #Dictionary for team roles. { Team # : {'name' : value, 'roles' : ['VIEW', 'COMMENT', 'EDIT']}}
-    collab_team_info= {}
-    team_counter = 0
+    print(collab_json)
+    return collab_json
+
+#Creates payload for all teams with only name and roles
+def construct_teams_payload(collab_json):
+    team_counter = 0 #counter to track teams to correctly add commas
+    collab_team_info = '{"teams":['
     for team in collab_json["teams"]:
-        collab_team_info[team_counter] = {}
-        collab_team_info[team_counter]['name']= team['name']
-        collab_team_info[team_counter]['roles'] = team['roles']
+        if team_counter != 0: #add comma before every team except first one
+            collab_team_info += ","
+        collab_team_info += '{"name":"%s","roles":%s}'%(team['name'],str(team['roles']).replace("'", '"'))
         team_counter += 1
-        
+    collab_team_info += ']}'
+    print(collab_team_info)
     return collab_team_info
+    
+
+def import_teams(url, payload):
+    print(url + "/.collaboration")
+    import_teams_call = requests.put(url + "/.collaboration", headers={'Authorization': import_org_api_key}, json = json.loads(payload))
+    
+    if(import_teams_call.status_code != 201 and import_teams_call.status_code != 200):
+        raise RuntimeError("Invalid OnPrem API Response - " + import_teams_call.text)
      
 main()
 
