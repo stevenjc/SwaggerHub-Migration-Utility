@@ -31,6 +31,7 @@ def main():
         
     #Pull specs in the outgoing org
     org_specs_call = requests.get(export_org_registry_api + export_org_name, headers= {'Authorization': export_org_api_key})
+    print(org_specs_call.text)
     org_apis_json = org_specs_call.json()
     
     if len(org_apis_json['apis']) == 0:
@@ -84,7 +85,7 @@ def export_versions(versions_json, sh_name, export_url, import_url):
         api_version_spec_call = requests.get(api_version_url, headers = {'Authorization': export_org_api_key})
         
         #push spec to OnPrem 
-        import_org_post_url = import_url + import_org_name + "/" + sh_name + '?isPrivate=' + str(private_visibility) + '&version=' + version_number
+        import_org_post_url = import_url + import_org_name + "/" + sh_name + '?isPrivate=' + str(private_visibility) + '&version=' + version_number + '&force=false'
         
         api_version_spec_json = api_version_spec_call.json()
         
@@ -97,7 +98,7 @@ def export_versions(versions_json, sh_name, export_url, import_url):
         
 def import_version(import_org_post_url, api_version_spec_json):
     onprem_post_call = requests.post(import_org_post_url, headers={'Authorization': import_org_api_key}, json=api_version_spec_json)
-        
+    print(str(onprem_post_call.status_code) + " and text " + onprem_post_call.text)
     if(onprem_post_call.status_code != 201 and onprem_post_call.status_code != 200):
         raise RuntimeError("Invalid OnPrem API Response - " + onprem_post_call.text)
         

@@ -24,7 +24,7 @@ def main():
     #Pull specs in the outgoing org
     org_specs_call = requests.get(import_org_registry_api + import_org_name, headers= {'Authorization': import_org_api_key, 'accept': 'application/json'})
     org_apis_json = org_specs_call.json()
-    
+    print(org_apis_json)
     if len(org_apis_json['apis']) == 0:
         raise RuntimeError("No APIs Found in Org- " + import_org_registry_api + import_org_name)
     
